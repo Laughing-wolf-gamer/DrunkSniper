@@ -12,11 +12,11 @@ public class Bullet : MonoBehaviour
     private Transform hitTransform;
     private bool isEnemyShot;
     private float shootingForce;
-    private Vector3 direction;
+    // private Vector3 direction;
     private Vector3 hitPoint;
 
     public void Launch(float shootingForce, Transform hitTransform, Vector3 hitPoint){
-        direction = (hitPoint - transform.position).normalized;
+        // direction = (hitPoint - transform.position).normalized;
         isEnemyShot = false;
         this.hitTransform = hitTransform;
         this.shootingForce = shootingForce;
@@ -49,7 +49,7 @@ public class Bullet : MonoBehaviour
     {
         float hori = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
         float vert = Input.GetAxisRaw("Vertical") * moveSpeed * Time.deltaTime;
-        transform.Rotate(transform.up * hori + transform.right * vert);
+        transform.Rotate(Vector3.up * hori + Vector3.right * vert);
         transform.Translate(Vector3.forward * shootingSpeed);
     }
 

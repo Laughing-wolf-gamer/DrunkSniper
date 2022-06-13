@@ -19,7 +19,6 @@ public class PlayerMovementController : MonoBehaviour
 	[SerializeField] private float maxMouseSensivity;
 	[SerializeField] private float mouseSensvityChangeRate;
 
-	private Rigidbody rb;
 
 	private float horizontalInput;
 	private float verticalInput;
@@ -28,6 +27,7 @@ public class PlayerMovementController : MonoBehaviour
 	private float currentRotationY;
 	private float currentRotationX;
 	private float mouseSensivity;
+	private Rigidbody rb;
 
 	private void Awake()
 	{
@@ -43,9 +43,8 @@ public class PlayerMovementController : MonoBehaviour
 	}
 
 
-	private void FixedUpdate()
-	{		
-		HandleTranslation();		
+	private void FixedUpdate(){
+		// HandleTranslation();
 	}
 
 	private void HandleTranslation()

@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerShootingController : MonoBehaviour
-{
+public class PlayerShootingController : MonoBehaviour {
+    [SerializeField] private LayerMask shootableLayer;
     [SerializeField] BulletTimeController bulletTimeController;
     [SerializeField] Bullet bulletPrefab;
     [SerializeField] Transform bulletSpawnTransform;
@@ -15,10 +15,13 @@ public class PlayerShootingController : MonoBehaviour
     private float scrollInput = 0f;
     private bool isShooting = false;
     private bool wasScopeOn;
+    private Camera cam;
 
+    private void Start(){
+        cam = Camera.main;
+    }
 
-    private void Update()
-    {
+    private void Update(){
         GetInput();
         HandleScope();
         HandleShooting();
@@ -35,7 +38,7 @@ public class PlayerShootingController : MonoBehaviour
 
     private void Shoot()
     {              
-        if (Physics.Raycast(Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out RaycastHit hit)){
+        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out RaycastHit hit,Mathf.Infinity,shootableLayer)){
 
             Bullet bulletInstance = Instantiate(bulletPrefab, bulletSpawnTransform.position, bulletSpawnTransform.rotation);
             bulletInstance.Launch(shootingForce, hit.collider.transform, hit.point);
@@ -69,8 +72,9 @@ public class PlayerShootingController : MonoBehaviour
 
     private void GetInput()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)){
             isScopeEnabled = !isScopeEnabled;
+        }
         isShooting = Input.GetMouseButtonDown(0) && isScopeEnabled;
         scrollInput = Input.mouseScrollDelta.y;
     }
