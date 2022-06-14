@@ -1,24 +1,41 @@
-﻿using System;
+﻿using UnityEngine;
+using GamerWolf.Utils;
 using System.Collections;
+using Baracuda.Monitoring;
+using Baracuda.Monitoring.API;
 using System.Collections.Generic;
-using UnityEngine;
-
-public class Bullet : MonoBehaviour
-{
+public class Bullet : MonoBehaviour ,IPooledObject{
+    [SerializeField] private float speedResetTime;
     [SerializeField] private LayerMask collisionMask;
     [SerializeField] private Transform visualTransform;
     [SerializeField] private float moveSpeed;
 
+    
     private Transform hitTransform;
     private bool isEnemyShot;
     private float shootingForce;
-    // private Vector3 direction;
     private Vector3 hitPoint;
-
-    public void Launch(float shootingForce, Transform hitTransform, Vector3 hitPoint){
-        // direction = (hitPoint - transform.position).normalized;
+    [Monitor]private float currentSpeed;
+    [Monitor] private float vert,hori;
+    private float speedSmoothtime;
+    private void Awake(){
+        MonitoringManager.RegisterTarget(this);
+        this.RegisterMonitor();
+    }
+    private void OnDestroy(){
+        MonitoringManager.UnregisterTarget(this);
+        this.UnregisterMonitor();
+    }
+    private void Start(){
+        SwipeDetection.current.OnSwipe += (x,y)=>{
+            hori = x;
+            vert = y;
+            currentSpeed = moveSpeed;
+        };
+    }
+    
+    public void Launch(float shootingForce, Vector3 hitPoint){
         isEnemyShot = false;
-        this.hitTransform = hitTransform;
         this.shootingForce = shootingForce;
         this.hitPoint = hitPoint;
     }
@@ -28,52 +45,56 @@ public class Bullet : MonoBehaviour
         CollisionCheck(moveDistance);
         Move(moveDistance);
         Rotate();
-        // CheckDistanceToEnemy();
     }
     private void CollisionCheck(float moveDistance){
         RaycastHit hit;
-        if(Physics.Raycast(transform.position,transform.forward,out hit,moveDistance,collisionMask,QueryTriggerInteraction.Ignore)){
-            EnemyController enemyController = hit.transform.GetComponentInParent<EnemyController>();
-            if(enemyController){
+        if(!isEnemyShot){    
+            if(Physics.Raycast(transform.position,transform.forward,out hit,moveDistance,collisionMask,QueryTriggerInteraction.Ignore)){
+                EnemyController enemyController = hit.transform.GetComponentInParent<EnemyController>();
+                if(enemyController){
+                    hitTransform = hit.transform;
+                    BulletTimeController.current.SetChangeCamera();
+                    ShootEnemy(hit.transform,enemyController);
+                    GameObject bloodObject = ObjectPoolingManager.current.SpawnFromPool("Blood",hit.point,Quaternion.FromToRotation(Vector3.up, transform.forward));
+                    if(bloodObject.TryGetComponent<ParticleSystem>(out ParticleSystem bloodEffect)){
+                        bloodEffect.Play();
+                    }
+                }else{
+                    BulletTimeController.current.OnBulletCollide();
+                }
                 Debug.Log("Colided with" + hit.transform.name);
-                BulletTimeController.current.SetChangeCamera();
-                ShootEnemy(hit.transform,enemyController);
-            }else{
-                Debug.Log("Colided with" + hit.transform.name);
-                BulletTimeController.current.OnBulletCollide();
             }
         }
     }
     
-    private void Move(float shootingSpeed)
-    {
-        float hori = Input.GetAxisRaw("Horizontal") * moveSpeed * Time.deltaTime;
-        float vert = Input.GetAxisRaw("Vertical") * moveSpeed * Time.deltaTime;
-        transform.Rotate(Vector3.up * hori + Vector3.right * vert);
+    private void Move(float shootingSpeed){
+        transform.Rotate(Vector3.left * vert * currentSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up * hori * currentSpeed * Time.deltaTime);
         transform.Translate(Vector3.forward * shootingSpeed);
     }
 
-    private void CheckDistanceToEnemy()
-    {
-        float distance = Vector3.Distance(transform.position, hitPoint);
-        if(distance <= 0.1 && !isEnemyShot)
-        {
-            EnemyController enemy = hitTransform.GetComponentInParent<EnemyController>();
-            if (enemy)
-            {
-                ShootEnemy(hitTransform, enemy);
-            }
+    private void LateUpdate(){
+        if(currentSpeed > 0f){
+            currentSpeed = Mathf.SmoothDamp(currentSpeed,0f,ref speedSmoothtime,speedResetTime * Time.deltaTime);
         }
     }
+
+    // private void CheckDistanceToEnemy(){
+    //     float distance = Vector3.Distance(transform.position, hitPoint);
+    //     if(distance <= 0.1 && !isEnemyShot){
+    //         EnemyController enemy = hitTransform.GetComponentInParent<EnemyController>();
+    //         if (enemy){
+    //             ShootEnemy(hitTransform, enemy);
+    //         }
+    //     }
+    // }
     
 
-    private void Rotate()
-    {
+    private void Rotate(){
         visualTransform.Rotate(Vector3.forward, 1200 * Time.deltaTime, Space.Self);
     }
 
-    private void ShootEnemy(Transform hitTransform, EnemyController enemy)
-    {
+    private void ShootEnemy(Transform hitTransform, EnemyController enemy){
         // BulletTimeController.current.SetChangeCamera();
         isEnemyShot = true;
         Rigidbody shotRB = hitTransform.GetComponent<Rigidbody>();
@@ -89,4 +110,18 @@ public class Bullet : MonoBehaviour
 	{
         return hitTransform;
 	}
+
+    public void OnObjectReuse(){
+        isEnemyShot = false;
+        gameObject.SetActive(true);
+    }
+
+    public void DestroyMySelfWithDelay(float delay = 0){
+        Invoke(nameof(DestroyNow),delay);
+    }
+
+    public void DestroyNow(){
+        CancelInvoke(nameof(DestroyNow));
+        gameObject.SetActive(false);
+    }
 }

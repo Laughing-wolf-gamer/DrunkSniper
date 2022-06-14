@@ -6,13 +6,11 @@ public class TimeScaleController : MonoBehaviour
 {
 	[SerializeField] private float slowTimeScale;
 
-	public void SlowDownTime()
-	{
+	public void SlowDownTime(){
 		Time.timeScale = slowTimeScale;
 	}
 
-	public void SpeedUpTime()
-	{
+	public void SpeedUpTime(){
 		Time.timeScale = 1f;
 	}
 }

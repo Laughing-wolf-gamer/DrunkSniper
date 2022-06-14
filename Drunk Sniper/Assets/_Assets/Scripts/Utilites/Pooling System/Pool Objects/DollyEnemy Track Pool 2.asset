@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e7e9d67086fff44b0e4d4358676938, type: 3}
+  m_Name: DollyEnemy Track Pool 2
+  m_EditorClassIdentifier: 
+  tag: DollyEnemy Track Pool 2
+  prefabs: {fileID: 1930909125078659177, guid: 01d1c1b92fa24114eaeeb6fc999d217a, type: 3}
+  size: 5

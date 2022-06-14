@@ -45,9 +45,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4577fcfaff99fd84db0556470357b01f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speedResetTime: 5
   collisionMask:
     serializedVersion: 2
-    m_Bits: 14337
+    m_Bits: 47105
   visualTransform: {fileID: 3079230806711497862}
   moveSpeed: 20
 --- !u!1 &3960346290168612073

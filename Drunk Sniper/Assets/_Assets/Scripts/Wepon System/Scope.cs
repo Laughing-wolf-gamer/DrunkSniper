@@ -12,8 +12,12 @@ public class Scope : MonoBehaviour
 	[SerializeField] private float minScopeFOV;
 	[SerializeField] private float maxScopeFOV;
 	[SerializeField] private float scopeFOVChangeSpeed;
-
+	private float currentFOVSpeed;
 	private Animator animator;
+
+	private void LateUpdate(){
+		
+	}
 
 	private void Awake()
 	{
@@ -28,6 +32,10 @@ public class Scope : MonoBehaviour
 	public void ChangeScopeFOV(float delta)
 	{
 		scopeCamera.fieldOfView += delta * Time.deltaTime * scopeFOVChangeSpeed;
+		scopeCamera.fieldOfView = Mathf.Clamp(scopeCamera.fieldOfView, minScopeFOV, maxScopeFOV);
+	}
+	public void ChangeView(float delta){
+		scopeCamera.fieldOfView = delta;
 		scopeCamera.fieldOfView = Mathf.Clamp(scopeCamera.fieldOfView, minScopeFOV, maxScopeFOV);
 	}
 

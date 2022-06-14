@@ -1,12 +1,12 @@
-﻿using System;
+﻿using UnityEngine;
+using GamerWolf.Utils;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class PlayerShootingController : MonoBehaviour {
     [SerializeField] private LayerMask shootableLayer;
     [SerializeField] BulletTimeController bulletTimeController;
-    [SerializeField] Bullet bulletPrefab;
+    // [SerializeField] Bullet bulletPrefab;
     [SerializeField] Transform bulletSpawnTransform;
     [SerializeField] Scope scope;
     [SerializeField] private float shootingForce;
@@ -16,66 +16,72 @@ public class PlayerShootingController : MonoBehaviour {
     private bool isShooting = false;
     private bool wasScopeOn;
     private Camera cam;
+    
 
     private void Start(){
+        
         cam = Camera.main;
     }
 
     private void Update(){
+
         GetInput();
         HandleScope();
         HandleShooting();
     }
 
-    private void HandleShooting()
-    {
-       
-        if (isShooting){
-            Shoot();
-
+    private void HandleShooting(){
+        if(SwipeDetection.current.OnPC()){
+            if (isShooting){
+                Shoot();
+            }
         }
     }
 
-    private void Shoot()
-    {              
+    private void Shoot(){              
         if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out RaycastHit hit,Mathf.Infinity,shootableLayer)){
-
-            Bullet bulletInstance = Instantiate(bulletPrefab, bulletSpawnTransform.position, bulletSpawnTransform.rotation);
-            bulletInstance.Launch(shootingForce, hit.collider.transform, hit.point);
-            bulletTimeController.StartSequence(bulletInstance, hit.point,22f);
+            GameObject bulletInstance = ObjectPoolingManager.current.SpawnFromPool("Bullet",bulletSpawnTransform.position,bulletSpawnTransform.rotation);
+            if(bulletInstance.TryGetComponent<Bullet>(out Bullet bullet)){
+                bullet.Launch(shootingForce, hit.point);
+                bulletTimeController.StartSequence(bullet, hit.point,22f);
+            }
         }
-        // {
-        //     EnemyController controller = hit.collider.GetComponentInParent<EnemyController>();
-        //     Vector3 direction = hit.point - bulletSpawnTransform.position;
-        //     if (controller)
-        //     {
-        //         if (direction.magnitude >= minDistanceToPlayAnimation)
-        //         {
-        //             controller.StopAnimation();
-        //         }
-        //         // else
-        //         // {
-        //         //     controller.OnEnemyShot(direction, hit.collider.GetComponent<Rigidbody>());
-        //         // }
-        //     }       
+    }
+
+    private void HandleScope(){
+        scope.ChangeScopeFOV(-scrollInput);
+        if (!wasScopeOn)
+            scope.ResetScopeFOV();
+        scope.SetScopeFlag(isScopeEnabled);
+        wasScopeOn = isScopeEnabled;
+        // if(SwipeDetection.current.OnPC()){
         // }
     }
-
-    private void HandleScope()
-    {
-        scope.ChangeScopeFOV(-scrollInput);
+    public void ChangeScopeSize(float amount){
+        scope.ChangeView(amount);
         if (!wasScopeOn)
             scope.ResetScopeFOV();
         scope.SetScopeFlag(isScopeEnabled);
         wasScopeOn = isScopeEnabled;
     }
 
-    private void GetInput()
-    {
-        if (Input.GetMouseButtonDown(1)){
-            isScopeEnabled = !isScopeEnabled;
+    private void GetInput() {
+        if(SwipeDetection.current.OnPC()){
+            if(Input.GetMouseButtonDown(1)){
+                ToggleScope();  
+            }
+            scrollInput = Input.mouseScrollDelta.y;
+            isShooting = Input.GetMouseButtonDown(0) && isScopeEnabled;
         }
-        isShooting = Input.GetMouseButtonDown(0) && isScopeEnabled;
-        scrollInput = Input.mouseScrollDelta.y;
+    }
+    public void ToggleScope(){
+        isScopeEnabled = !isScopeEnabled;
+        SwipeDetection.current.CanDetectSwipe(isScopeEnabled);
+    }
+    public void Fire(){
+        if(isScopeEnabled){
+            Shoot();
+        }
+        
     }
 }

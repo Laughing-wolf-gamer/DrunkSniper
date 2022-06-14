@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Linq;
 using Cinemachine;
 using UnityEngine;
+using System.Linq;
+using GamerWolf.Utils;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,10 +10,10 @@ using System.Collections.Generic;
 public class BulletTimeController : MonoBehaviour
 {
 	[Serializable]
-	public class TargetTrackingSetup
-	{
-		public CinemachinePathController avaliableTrack;
-		public CameraCartController avaliableDolly;
+	public class TargetTrackingSetup{
+		// public CinemachinePathController avaliableTrack;
+		public string avaliableTrack;
+		public string avaliableDolly;
 	}
 
 	[Serializable]
@@ -24,8 +25,10 @@ public class BulletTimeController : MonoBehaviour
 
 	[SerializeField] private GameObject canvas;
 	[SerializeField] private CinemachineBrain cameraBrain;
-	[SerializeField] private BulletTrackingSetup[] bulletTackingSetup;
-	[SerializeField] private TargetTrackingSetup[] enemyTrackingSetup;
+	[SerializeField] private BulletTrackingSetupSO[] bulletTrackingSetupSos;
+	[SerializeField] private TargetTrackingSetupSO[] enemyTrackingSetUpSos;
+	// [SerializeField] private BulletTrackingSetup[] bulletTackingSetup;
+	// [SerializeField] private TargetTrackingSetup[] enemyTrackingSetup;
 	[SerializeField] private PlayerShootingController shootingController;
 	[SerializeField] private float distanceToChangeCamera;
 	[SerializeField] private float finishingCameraDuration;
@@ -35,26 +38,26 @@ public class BulletTimeController : MonoBehaviour
 	private CameraCartController dollyInstance;
 	private Bullet activeBullet;
 	private Vector3 targetPosition;
-	private List<TargetTrackingSetup> clearTracks = new List<TargetTrackingSetup>();
+	private List<TargetTrackingSetupSO> clearTracks = new List<TargetTrackingSetupSO>();
 	private bool isLastCameraActive = false;
 	private float maxTimeToLiveDolly;
 	public static BulletTimeController current;
 	
 
 
-	private void Awake()
-	{
+	private void Awake(){
 		current = this;
 		timeScaleController = GetComponent<TimeScaleController>();
 	}
 	
 	internal void StartSequence(Bullet activeBullet, Vector3 targetPosition,float maxTimeToLiveDolly)
 	{
+		canChangeCamera = false;
 		ResetVariables();
 		canCountDown = true;
 		isEndedSequence = false;
 		float distanceToTarget = Vector3.Distance(activeBullet.transform.position, targetPosition);
-		var setupsInRange = bulletTackingSetup.Where(s => distanceToTarget > s.minDistance && distanceToTarget < s.maxDistance).ToArray();
+		var setupsInRange = bulletTrackingSetupSos.Where(s => distanceToTarget > s.minDistance && distanceToTarget < s.maxDistance).ToArray();
 		var selectedTrackingSetup = SelectTrackingSetup(activeBullet.transform,setupsInRange,activeBullet.transform.rotation);
 		if (selectedTrackingSetup == null)
 			return;
@@ -62,8 +65,10 @@ public class BulletTimeController : MonoBehaviour
 		this.targetPosition = targetPosition;
 		this.maxTimeToLiveDolly = maxTimeToLiveDolly;
 		
-
-		CreateBulletPath(activeBullet.transform, selectedTrackingSetup.avaliableTrack);
+		GameObject newTrack = ObjectPoolingManager.current.SpawnFromPool(selectedTrackingSetup.avaliableTrack);
+		if(newTrack.TryGetComponent<CinemachinePathController>(out CinemachinePathController avialbelPath)){
+			CreateBulletPath(activeBullet.transform, avialbelPath);
+		}
 		CreateDolly(selectedTrackingSetup);
 		cameraBrain.gameObject.SetActive(true);
 		shootingController.gameObject.SetActive(false);
@@ -72,10 +77,14 @@ public class BulletTimeController : MonoBehaviour
 		dollyInstance.InitDolly(trackInstance, activeBullet.transform, speed);
 	}
 
-	private void CreateDolly(TargetTrackingSetup setup)
+	private void CreateDolly(TargetTrackingSetupSO setup)
 	{
 		var selectedDolly = setup.avaliableDolly;
-		dollyInstance = Instantiate(selectedDolly);
+		var newObjct = ObjectPoolingManager.current.SpawnFromPool(selectedDolly);
+		if(newObjct.TryGetComponent<CameraCartController>(out CameraCartController cart)){
+			dollyInstance = cart;
+		}
+		// dollyInstance = Instantiate(selectedDolly);
 	}
 
 	private void CreateBulletPath(Transform bulletTransform, CinemachinePathController selectedPath)
@@ -103,13 +112,18 @@ public class BulletTimeController : MonoBehaviour
 		trackInstance = Instantiate(selectedPath.path, enemytransform.position, rotation);
 	}
 
-	private TargetTrackingSetup SelectTrackingSetup(Transform trans, TargetTrackingSetup[] setups, Quaternion orientation)
+	private TargetTrackingSetupSO SelectTrackingSetup(Transform trans, TargetTrackingSetupSO[] setups, Quaternion orientation)
 	{
 		clearTracks.Clear();
 		for (int i = 0; i < setups.Length; i++)
 		{
-			if (CheckIfPathIsClear(setups[i].avaliableTrack, trans, orientation))
-				clearTracks.Add(setups[i]);
+			GameObject newObject = ObjectPoolingManager.current.SpawnFromPool(setups[i].avaliableTrack);
+			if(newObject.TryGetComponent<CinemachinePathController>(out CinemachinePathController newPath)){
+
+				if (CheckIfPathIsClear(newPath, trans, orientation)){
+					clearTracks.Add(setups[i]);
+				}
+			}
 		}
 		if (clearTracks.Count == 0)
 			return null;
@@ -188,10 +202,14 @@ public class BulletTimeController : MonoBehaviour
 		if (hitTransform)
 		{
 			Quaternion rotation = Quaternion.Euler(Vector3.up * activeBullet.transform.rotation.eulerAngles.y);
-			var selectedTrackingSetup = SelectTrackingSetup(hitTransform, enemyTrackingSetup, rotation);
-			if (selectedTrackingSetup != null)
-			{
-				CreateEnemyPath(hitTransform, activeBullet.transform, selectedTrackingSetup.avaliableTrack);
+			var selectedTrackingSetup = SelectTrackingSetup(hitTransform, enemyTrackingSetUpSos, rotation);
+			if (selectedTrackingSetup != null){
+				GameObject newObject = ObjectPoolingManager.current.SpawnFromPool(selectedTrackingSetup.avaliableTrack);
+				CinemachinePathController newPath;
+				if(newObject.TryGetComponent<CinemachinePathController>(out newPath)){
+					CreateEnemyPath(hitTransform, activeBullet.transform, newPath);
+
+				}
 				CreateDolly(selectedTrackingSetup);
 				dollyInstance.InitDolly(trackInstance, hitTransform.transform);
 				timeScaleController.SlowDownTime();
@@ -210,8 +228,7 @@ public class BulletTimeController : MonoBehaviour
 		}
 	}
 
-	private IEnumerator FinishSequence(float _finishingCameraDuration)
-	{
+	private IEnumerator FinishSequence(float _finishingCameraDuration){
 		yield return new WaitForSecondsRealtime(_finishingCameraDuration);
 		canChangeCamera = false;
 		cameraBrain.gameObject.SetActive(false);
@@ -219,7 +236,11 @@ public class BulletTimeController : MonoBehaviour
 		canvas.gameObject.SetActive(true);
 		timeScaleController.SpeedUpTime();
 		DestroyCinemachineSetup();
-		Destroy(activeBullet.gameObject);
+		if(activeBullet != null){
+			activeBullet.DestroyNow();
+		}else{
+			Debug.LogError("No Bullet Found to Destory");
+		}
 		ResetVariables();
 	}
 
