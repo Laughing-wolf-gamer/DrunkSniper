@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.006013818, g: 0.060162302, b: 0.19518855, a: 1}
+  m_IndirectSpecularColor: {r: 0.005982376, g: 0.06013626, b: 0.1950731, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3841,7 +3841,7 @@ MonoBehaviour:
   scopeCamera: {fileID: 1571563100}
   minScopeFOV: 2
   maxScopeFOV: 30
-  scopeFOVChangeSpeed: 500
+  scopeFOVChangeSpeed: 20
 --- !u!4 &535018468
 Transform:
   m_ObjectHideFlags: 0
@@ -18264,7 +18264,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2075531477}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -165.5, y: 98.5, z: 42.9}
+  m_LocalPosition: {x: -165.5, y: 98.5, z: 41.934}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 961131611}

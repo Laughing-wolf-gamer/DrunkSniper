@@ -50,7 +50,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 47105
   visualTransform: {fileID: 3079230806711497862}
-  moveSpeed: 20
+  moveSpeed: 10
 --- !u!1 &3960346290168612073
 GameObject:
   m_ObjectHideFlags: 0

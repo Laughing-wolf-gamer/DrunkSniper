@@ -15,10 +15,6 @@ public class Scope : MonoBehaviour
 	private float currentFOVSpeed;
 	private Animator animator;
 
-	private void LateUpdate(){
-		
-	}
-
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();

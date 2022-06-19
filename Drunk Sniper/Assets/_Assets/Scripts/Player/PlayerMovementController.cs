@@ -34,8 +34,7 @@ public class PlayerMovementController : MonoBehaviour {
 	private Vector2 moveStartPos;
 	[Monitor] private Vector2 moveDirection;
 
-	private void Awake()
-	{
+	private void Awake() {
 		MonitoringManager.RegisterTarget(this);
 		this.RegisterMonitor();
 		rb = GetComponent<Rigidbody>();
@@ -45,30 +44,12 @@ public class PlayerMovementController : MonoBehaviour {
 		this.UnregisterMonitor();
 	}
 
-	private void Start()
-	{
+	private void Start() {
 		mouseSensivity = maxMouseSensivity;
 		currentRotationY = transform.eulerAngles.y;
 		currentRotationX = transform.eulerAngles.x;
-		// Cursor.lockState = CursorLockMode.Locked;
+		Cursor.lockState = CursorLockMode.Locked;
 	}
-
-
-	// private void FixedUpdate(){
-	// 	// HandleTranslation();
-	// }
-	
-
-	// private void HandleTranslation()
-	// {
-	// 	var moveVector = new Vector3(horizontalInput, 0f, verticalInput);
-	// 	var worldMoveVector = transform.TransformDirection(moveVector);
-	// 	worldMoveVector = new Vector3(worldMoveVector.x, 0f, worldMoveVector.z);
-	// 	rb.AddForce(worldMoveVector.normalized * Time.deltaTime * moveSpeed, ForceMode.Force);
-	// }
-
-	
-
 	private void GetInput(){
 		if(SwipeDetection.current.OnPC()){
 			horizontalInput = Input.GetAxisRaw(HORIZONTAL);
@@ -106,8 +87,7 @@ public class PlayerMovementController : MonoBehaviour {
 		HandleRotation();
 	}
 
-	private void HandleRotation()
-	{
+	private void HandleRotation() {
 		float yaw = mouseInputX * Time.deltaTime * rotationSpeed * mouseSensivity;
 		currentRotationY += yaw;
 		float pitch = mouseInputY * Time.deltaTime * rotationSpeed * mouseSensivity;
