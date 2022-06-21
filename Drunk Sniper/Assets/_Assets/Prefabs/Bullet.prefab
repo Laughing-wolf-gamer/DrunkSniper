@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4577fcfaff99fd84db0556470357b01f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedResetTime: 5
+  speedResetTime: 10
   collisionMask:
     serializedVersion: 2
     m_Bits: 47105
   visualTransform: {fileID: 3079230806711497862}
-  moveSpeed: 10
+  moveSpeed: 50
 --- !u!1 &3960346290168612073
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 3762632430489498419}
   - component: {fileID: 3761295854771677001}
   - component: {fileID: 3960367772410157988}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: distortion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3960346290168612073}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0107}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0279}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3876608130056721950}
@@ -157,7 +157,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 0
   randomSeed: 0
@@ -274,7 +274,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.015686275}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4822,7 +4822,6 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e91e98263a483504e9713122568d4b66, type: 2}
   - {fileID: 2100000, guid: e91e98263a483504e9713122568d4b66, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

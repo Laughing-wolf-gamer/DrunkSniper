@@ -18,6 +18,7 @@ public class Bullet : MonoBehaviour ,IPooledObject{
     [Monitor]private float currentSpeed;
     [Monitor] private float vert,hori;
     private float speedSmoothtime;
+    
     private void Awake(){
         MonitoringManager.RegisterTarget(this);
         this.RegisterMonitor();
@@ -38,9 +39,31 @@ public class Bullet : MonoBehaviour ,IPooledObject{
         isEnemyShot = false;
         this.shootingForce = shootingForce;
         this.hitPoint = hitPoint;
+        
     }
 
     private void Update(){
+        if(SwipeDetection.current.OnPC()){
+            if(Input.GetKeyDown(KeyCode.RightArrow)){
+                hori = 1f;       
+                currentSpeed = moveSpeed;
+            }else if(Input.GetKeyDown(KeyCode.LeftArrow)){
+                hori = -1f;
+                currentSpeed = moveSpeed;
+            }else{
+                hori = 0f;
+            }
+            if(Input.GetKeyDown(KeyCode.UpArrow)){
+                vert = 1f;
+                currentSpeed = moveSpeed;
+            }else if(Input.GetKeyDown(KeyCode.DownArrow)){
+                vert = -1f;
+                currentSpeed = moveSpeed;
+            }else{
+                vert = 0f;
+            }
+
+        }
         float moveDistance = shootingForce * Time.deltaTime;
         CollisionCheck(moveDistance);
         Move(moveDistance);
@@ -60,14 +83,20 @@ public class Bullet : MonoBehaviour ,IPooledObject{
                         bloodEffect.Play();
                     }
                 }else{
+                    GameObject impactObject = ObjectPoolingManager.current.SpawnFromPool("Bullet Impact",hit.point,Quaternion.FromToRotation(Vector3.up, transform.forward));
+                    if(impactObject.TryGetComponent<ParticleSystem>(out ParticleSystem bulletImpactEffect)){
+                        bulletImpactEffect.Play();
+                    }
                     BulletTimeController.current.OnBulletCollide();
                 }
                 Debug.Log("Colided with" + hit.transform.name);
             }
         }
+        
     }
     
     private void Move(float shootingSpeed){
+        shootingForce += Time.deltaTime / 10f;
         transform.Rotate(Vector3.left * vert * currentSpeed * Time.deltaTime);
         transform.Rotate(Vector3.up * hori * currentSpeed * Time.deltaTime);
         transform.Translate(Vector3.forward * shootingSpeed);

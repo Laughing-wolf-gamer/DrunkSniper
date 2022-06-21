@@ -3,25 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RagdollController : MonoBehaviour
-{
-    private Rigidbody[] _rigidbodies;
-    private Rigidbody[] rigidbodies
-    {
-        get
-        {
-            if (_rigidbodies == null)
-                _rigidbodies = GetComponentsInChildren<Rigidbody>();
-            return _rigidbodies;
-        }       
-    }
+public class RagdollController : MonoBehaviour {
+    [SerializeField] private Rigidbody[] _rigidbodies;
+    // private Rigidbody[] rigidbodies
+    // {
+    //     get
+    //     {
+    //         if (_rigidbodies == null)
+    //             _rigidbodies = GetComponentsInChildren<Rigidbody>();
+    //         return _rigidbodies;
+    //     }       
+    // }
     private void Awake()
     {
         DisableRagdoll();
     }
     private void DisableRagdoll()
     {
-        foreach (var rb in rigidbodies)
+        foreach (var rb in _rigidbodies)
         {
             rb.isKinematic = true;
             rb.interpolation = RigidbodyInterpolation.None;
@@ -30,21 +29,21 @@ public class RagdollController : MonoBehaviour
     }
     public void EnableRagdoll()
     {
-        foreach (var rb in rigidbodies)
+        foreach (var rb in _rigidbodies)
         {
             rb.isKinematic = false;
             rb.interpolation = RigidbodyInterpolation.Interpolate;
         }
     }
 
-    private void Update()
-    {
-        DebugRagdoll();
-    }
+    // private void Update()
+    // {
+    //     DebugRagdoll();
+    // }
 
-    private void DebugRagdoll()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-            EnableRagdoll();
-    }
+    // private void DebugRagdoll()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.Space))
+    //         EnableRagdoll();
+    // }
 }

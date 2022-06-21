@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerShootingController : MonoBehaviour {
+    [SerializeField] private float bulletTimeLiveTime = 22f;
     [SerializeField] private LayerMask shootableLayer;
     [SerializeField] BulletTimeController bulletTimeController;
     // [SerializeField] Bullet bulletPrefab;
@@ -19,7 +20,8 @@ public class PlayerShootingController : MonoBehaviour {
     
 
     private void Start(){
-        
+        isScopeEnabled = true;
+        SwipeDetection.current.CanDetectSwipe(isScopeEnabled);
         cam = Camera.main;
     }
 
@@ -43,7 +45,7 @@ public class PlayerShootingController : MonoBehaviour {
             GameObject bulletInstance = ObjectPoolingManager.current.SpawnFromPool("Bullet",bulletSpawnTransform.position,bulletSpawnTransform.rotation);
             if(bulletInstance.TryGetComponent<Bullet>(out Bullet bullet)){
                 bullet.Launch(shootingForce, hit.point);
-                bulletTimeController.StartSequence(bullet, hit.point,22f);
+                bulletTimeController.StartSequence(bullet, hit.point,bulletTimeLiveTime);
             }
         }
     }
@@ -75,7 +77,7 @@ public class PlayerShootingController : MonoBehaviour {
         }
     }
     public void ToggleScope(){
-        isScopeEnabled = !isScopeEnabled;
+        // isScopeEnabled = !isScopeEnabled;
         SwipeDetection.current.CanDetectSwipe(isScopeEnabled);
     }
     public void Fire(){
