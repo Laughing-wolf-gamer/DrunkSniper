@@ -48,9 +48,9 @@ MonoBehaviour:
   speedResetTime: 10
   collisionMask:
     serializedVersion: 2
-    m_Bits: 47105
+    m_Bits: 38913
   visualTransform: {fileID: 3079230806711497862}
-  moveSpeed: 50
+  moveSpeed: 20
 --- !u!1 &3960346290168612073
 GameObject:
   m_ObjectHideFlags: 0
