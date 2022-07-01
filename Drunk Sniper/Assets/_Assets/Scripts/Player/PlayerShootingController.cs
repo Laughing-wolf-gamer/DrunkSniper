@@ -42,6 +42,7 @@ public class PlayerShootingController : MonoBehaviour {
 
     private void Shoot(){              
         if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out RaycastHit hit,Mathf.Infinity,shootableLayer)){
+            TimeScaleController.current.SetBulletMoving(true);
             GameObject bulletInstance = ObjectPoolingManager.current.SpawnFromPool("Bullet",bulletSpawnTransform.position,bulletSpawnTransform.rotation);
             if(bulletInstance.TryGetComponent<Bullet>(out Bullet bullet)){
                 bullet.Launch(shootingForce, hit.point);

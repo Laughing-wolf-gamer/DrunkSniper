@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Baracuda.Monitoring;
@@ -50,6 +50,7 @@ public class PlayerMovementController : MonoBehaviour {
 		currentRotationX = transform.eulerAngles.x;
 		Cursor.lockState = CursorLockMode.Locked;
 	}
+	
 	private void GetInput(){
 		if(SwipeDetection.current.OnPC()){
 			horizontalInput = Input.GetAxisRaw(HORIZONTAL);

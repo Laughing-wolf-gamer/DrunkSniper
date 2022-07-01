@@ -4,17 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class EnemyAnimationController : MonoBehaviour
-{
+public class EnemyAnimationController : MonoBehaviour {
     private Animator animator;
 
-    private void Awake()
-    {
+    private void Awake(){
         animator = GetComponent<Animator>();
     }
 
-    public void DisableAnimator()
-    {
+    public void DisableAnimator(){
         animator.enabled = false;
+    }
+
+
+    public void Fire(){
+        SetWalking(false);
+        animator.SetTrigger("Fire");
+    }
+    public void SetWalking(bool walk){
+        animator.SetBool("isWalking",walk);
     }
 }

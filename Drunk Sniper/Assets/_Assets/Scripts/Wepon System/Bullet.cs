@@ -89,6 +89,7 @@ public class Bullet : MonoBehaviour ,IPooledObject{
                     }
                     BulletTimeController.current.OnBulletCollide();
                 }
+                TimeScaleController.current.SetBulletMoving(false);
                 Debug.Log("Colided with" + hit.transform.name);
             }
         }
