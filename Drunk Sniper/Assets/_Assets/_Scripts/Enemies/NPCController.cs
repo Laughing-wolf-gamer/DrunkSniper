@@ -9,9 +9,11 @@ public enum NPCType{
 [RequireComponent(typeof(EnemyAnimationController))]
 [RequireComponent(typeof(RagdollController))]
 public class NPCController : MonoBehaviour {
-
+    
+    [SerializeField] private Transform[] shootingPoints;
     [SerializeField] private NPCType npcType;
     [SerializeField] protected bool isDead,isAlerted;
+    [SerializeField] private float shootDelay = 2f;
     protected EnemyAnimationController animationController;
     protected RagdollController ragdollController;
     
@@ -22,17 +24,20 @@ public class NPCController : MonoBehaviour {
         animationController = GetComponent<EnemyAnimationController>();
         ragdollController = GetComponent<RagdollController>();
         isDead = false;
-        isAlerted = false;
+        // isAlerted;
     }
     protected virtual void Start(){
         PlayDefultMovement();
         masterController = MasterController.current;
-        masterController.OnPlayerFirstShotComplete += ()=>{
-            ShootAtPlayer();
-        };
+        masterController.onShotComplete += ShootAtPlayer;
     }
     private void Update(){
         isBulletMoving = masterController.IsBulletMoving;
+        if(isBulletMoving){
+            animationController.ReduceAnimationSpeed();
+        }else{
+            animationController.BackToNormal();
+        }
     }
     
     public virtual void PlayDefultMovement(){
@@ -40,7 +45,23 @@ public class NPCController : MonoBehaviour {
     }
     
     public virtual void ShootAtPlayer(){
-        
+        Debug.Log("Fired");
+        isAlerted = true;
+        ShootRoutine = StartCoroutine(ShootPlayerRoutine());
+    }
+    private IEnumerator ShootPlayerRoutine(){
+        while(!isDead){
+            if(!isBulletMoving){
+                int rand = Random.Range(0,shootingPoints.Length);
+                Debug.DrawLine(transform.position,shootingPoints[rand].position,Color.red,20f);
+                transform.LookAt(new Vector3(shootingPoints[rand].position.x,transform.position.y,shootingPoints[rand].position.z));
+                animationController.Fire();
+            }
+            yield return new WaitForSeconds(shootDelay);
+        }
+        if(ShootRoutine != null){
+            StopCoroutine(ShootRoutine);
+        }
     }
     
     public void OnEnemyShot(Vector3 shootDirection, Rigidbody shotRB){

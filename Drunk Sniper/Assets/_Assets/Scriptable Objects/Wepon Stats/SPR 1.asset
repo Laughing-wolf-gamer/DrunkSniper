@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SPR 1
   m_EditorClassIdentifier: 
   bulletSpeed: 60
-  scopeFov: 2
-  reloadingTime: 2
-  maxBulletInMag: 5
+  scopeFov: 5
+  reloadingTime: 3
+  maxBulletInMag: 2

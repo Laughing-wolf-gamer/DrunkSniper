@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class Scope : MonoBehaviour
-{
+public class Scope : MonoBehaviour {
 	private const string SCOPE = "Scope";
 	[SerializeField] private WeponStatsSO weponStats;
 	[SerializeField] GameObject postProcessingVolume;
@@ -25,32 +24,19 @@ public class Scope : MonoBehaviour
 		animator.SetBool(SCOPE, isScopeOn);
 
 	}
+	public void Relading(bool isReloading){
+		animator.SetBool("Reload",isReloading);
+	}
 
-	// public void ChangeScopeFOV(float delta){
-	// 	scopeCamera.fieldOfView += delta * Time.deltaTime * scopeFOVChangeSpeed;
-	// 	scopeCamera.fieldOfView = Mathf.Clamp(scopeCamera.fieldOfView, minScopeFOV, maxScopeFOV);
-	// }
-	// public void ChangeView(float delta){
-	// 	scopeCamera.fieldOfView = delta;
-	// 	scopeCamera.fieldOfView = Mathf.Clamp(scopeCamera.fieldOfView, minScopeFOV, maxScopeFOV);
-	// }
-
-	// internal void ResetScopeFOV(){
-	// 	scopeCamera.fieldOfView = maxScopeFOV;
-	// }
-
-	public void EnablePostProcessing()
-	{
+	public void EnablePostProcessing(){
 		postProcessingVolume.gameObject.SetActive(true);
 	}
 
-	public void DisablePostProcessing()
-	{
+	public void DisablePostProcessing(){
 		postProcessingVolume.gameObject.SetActive(false);
 	}
 
-	public float GetZoomPrc()
-	{
+	public float GetZoomPrc(){
 		float range = Mathf.Abs(maxScopeFOV - minScopeFOV);
 		float currentZoonDelta = scopeCamera.fieldOfView - minScopeFOV;
 		return currentZoonDelta / range;

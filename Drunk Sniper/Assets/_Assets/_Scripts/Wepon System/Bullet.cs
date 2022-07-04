@@ -15,9 +15,9 @@ public class Bullet : MonoBehaviour ,IPooledObject{
     private bool isEnemyShot;
     private float shootingForce;
     private Vector3 hitPoint;
-    [Monitor]private float currentSpeed;
-    [Monitor] private float vert,hori;
-    private float speedSmoothtime;
+    private float currentSpeed;
+    private float vert,hori;
+    private float speedSmoothTimeRef;
     private bool isFirstShot;
     private MasterController masterController;
     private void Awake(){
@@ -76,8 +76,9 @@ public class Bullet : MonoBehaviour ,IPooledObject{
         RaycastHit hit;
         if(!isEnemyShot){    
             if(Physics.Raycast(transform.position,transform.forward,out hit,moveDistance,collisionMask,QueryTriggerInteraction.Ignore)){
+                DestroyNow();
                 NPCController enemyController = hit.transform.GetComponentInParent<NPCController>();
-                if(enemyController){
+                if(enemyController != null){
                     hitTransform = hit.transform;
                     BulletTimeController.current.SetChangeCamera();
                     ShootEnemy(hit.transform,enemyController);
@@ -110,7 +111,7 @@ public class Bullet : MonoBehaviour ,IPooledObject{
 
     private void LateUpdate(){
         if(currentSpeed > 0f){
-            currentSpeed = Mathf.SmoothDamp(currentSpeed,0f,ref speedSmoothtime,speedResetTime * Time.deltaTime);
+            currentSpeed = Mathf.SmoothDamp(currentSpeed,0f,ref speedSmoothTimeRef,speedResetTime * Time.deltaTime);
         }
     }
 
@@ -157,6 +158,7 @@ public class Bullet : MonoBehaviour ,IPooledObject{
     public void DestroyNow(){
         CancelInvoke(nameof(DestroyNow));
         MasterController.current.SetBulletMoving(false);
+        MasterController.current.InvokeShotComplete();
         gameObject.SetActive(false);
     }
 }

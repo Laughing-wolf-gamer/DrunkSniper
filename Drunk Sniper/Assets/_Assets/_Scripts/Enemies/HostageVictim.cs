@@ -15,12 +15,11 @@ public class HostageVictim : NPCController {
                 Duck();
             }else{
                 Debug.Log("Victime Dead");
-                MasterController.current.SetGameOver(false);
             }
         };
     }
     private void TakenHostage(){
-        animationController.setDefultAnimation(true);
+        animationController.SetDefultAnimation(true);
     }
     public void Duck(){
         animationController.Duck();

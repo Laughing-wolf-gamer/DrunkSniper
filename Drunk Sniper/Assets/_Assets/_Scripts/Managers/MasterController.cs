@@ -27,19 +27,21 @@ public class MasterController : MonoBehaviour {
     private float UpdateDelay = 0.1f;
     private int collectedCoins;
     public Action OnPlayerFirstShotComplete;
-    [Monitor] private float blurAmount;
+    public Action onShotComplete;
+    private float blurAmount;
     
     public static MasterController current;
     private void Awake(){
         current = this;
         MonitoringManager.RegisterTarget(this);
     }
-    private void OnDestory(){
+    private void OnDestroy(){
         MonitoringManager.UnregisterTarget(this);
     }
 
     private void Start(){
         Time.timeScale = 1f;
+        isGamePlaying = true;
         StartCoroutine(GameStartRoutine());
     }
     
@@ -119,5 +121,8 @@ public class MasterController : MonoBehaviour {
 	}
     public void InvokeFirstShot(){
 		OnPlayerFirstShotComplete?.Invoke();
+	}
+    public void InvokeShotComplete(){
+		onShotComplete?.Invoke();
 	}
 }

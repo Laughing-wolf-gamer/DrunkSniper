@@ -15,16 +15,21 @@ public class EnemyAnimationController : MonoBehaviour {
         animator.enabled = false;
     }
 
-
+    public void ReduceAnimationSpeed(){
+        animator.speed = 0.07f;
+    }
+    public void BackToNormal(){
+        animator.speed = 1f;
+    }
     public void Fire(){
-        setDefultAnimation(false);
+        SetDefultAnimation(false);
         animator.SetTrigger("Fire");
     }
     public void Duck(){
-        setDefultAnimation(false);
+        SetDefultAnimation(false);
         animator.SetTrigger("Duck");
     }
-    public void setDefultAnimation(bool walk){
+    public void SetDefultAnimation(bool walk){
         animator.SetBool("Defult",walk);
     }
     

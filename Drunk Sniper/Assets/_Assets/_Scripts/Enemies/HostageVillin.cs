@@ -11,7 +11,7 @@ public class HostageVillin : NPCController {
         TakeHostage();
     }
     private void TakeHostage(){
-        animationController.setDefultAnimation(true);
+        animationController.SetDefultAnimation(true);
     }
     protected override void Start(){
         base.Start();

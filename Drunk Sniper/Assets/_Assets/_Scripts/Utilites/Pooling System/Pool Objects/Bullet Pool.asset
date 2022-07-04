@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tag: Bullet
   prefabs: {fileID: 3873591501865538396, guid: e3db0549170f6954aa3b8842d34202c9, type: 3}
-  size: 1
+  size: 3

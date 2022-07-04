@@ -7,8 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(TimeScaleController))]
-public class BulletTimeController : MonoBehaviour
-{
+public class BulletTimeController : MonoBehaviour {
 	[Serializable]
 	public class TargetTrackingSetup{
 		// public CinemachinePathController avaliableTrack;

@@ -15,7 +15,6 @@ public class PlayerMovementController : MonoBehaviour {
 	[SerializeField] private Vector2 minMaxYRot,minMaxXRot;
 	[SerializeField] private Transform rifleTransformParent;
 	[SerializeField] private PlayerInput playerInput;
-	[SerializeField] private float moveSpeed;
 	[SerializeField] private float rotationSpeed,rotSmoothTime;
 	[SerializeField] private float minMouseSensivity;
 	[SerializeField] private float maxMouseSensivity;
@@ -37,12 +36,10 @@ public class PlayerMovementController : MonoBehaviour {
 
 	private void Awake() {
 		MonitoringManager.RegisterTarget(this);
-		this.RegisterMonitor();
 		rb = GetComponent<Rigidbody>();
 	}
 	private void OnDestroy(){
 		MonitoringManager.UnregisterTarget(this);
-		this.UnregisterMonitor();
 	}
 
 	private void Start() {
@@ -70,9 +67,9 @@ public class PlayerMovementController : MonoBehaviour {
 		currentRotationX -= pitch;
 		currentRotationY = Mathf.Clamp(currentRotationY,minMaxYRot.x,minMaxYRot.y);
 		currentRotationX = Mathf.Clamp(currentRotationX, minMaxXRot.x,minMaxXRot.y);
-		Quaternion newRotX = Quaternion.Euler(currentRotationX, 0, 0);
+		Quaternion newRotX = Quaternion.Euler(currentRotationX,0f, 0);
 		rifleTransformParent.localRotation = Quaternion.Slerp(rifleTransformParent.localRotation,newRotX,rotSmoothTime * Time.deltaTime);
-		Quaternion newRotY = Quaternion.Euler(0, currentRotationY, 0);
+		Quaternion newRotY = Quaternion.Euler(transform.localRotation.x, currentRotationY, transform.localRotation.z);
 		transform.localRotation = Quaternion.Slerp(transform.localRotation,newRotY,rotSmoothTime * Time.deltaTime);
 	}
 }
