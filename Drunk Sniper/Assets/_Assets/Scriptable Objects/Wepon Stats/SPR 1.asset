@@ -15,4 +15,4 @@ MonoBehaviour:
   bulletSpeed: 60
   scopeFov: 5
   reloadingTime: 3
-  maxBulletInMag: 2
+  maxBulletInMag: 5
