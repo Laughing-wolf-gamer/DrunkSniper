@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class StaticEnemies : NPCController {
     
-    
+    [SerializeField] private bool isOnRightSide;
     
     [SerializeField] private float coverTime;
     public override void PlayDefultMovement(){
@@ -17,7 +17,9 @@ public class StaticEnemies : NPCController {
     }
     private IEnumerator StartCoviering(){
         while(!isDead){
+            
             if(isAlerted){
+                animationController.SetCoverDirction(isOnRightSide);
                 animationController.SetDefultAnimation(false);
             }else{
                 animationController.SetDefultAnimation(true);

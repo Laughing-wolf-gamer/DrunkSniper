@@ -16,8 +16,8 @@ public class MasterController : MonoBehaviour {
     [SerializeField] private UnityEvent OnGamePlaying,OnGameEnd,OnGamePaused,OnGameResume,OnPlayerWon,OnPlayerLost;
 
     [SerializeField] private bool isGamePause;
-    [Monitor] public bool isGamePlaying{get;private set;}
-    [Monitor] private bool isPlayerWon;
+    public bool isGamePlaying{get;private set;}
+    private bool isPlayerWon;
     [Monitor] public bool IsBulletMoving{get;private set;}
 
     private Vector3 lastPosition;

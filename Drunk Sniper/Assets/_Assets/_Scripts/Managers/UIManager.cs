@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour {
     
     [SerializeField] private TextMeshProUGUI[] enemyCountText;
     [SerializeField] private TextMeshProUGUI[] hostageCountText;
+    [SerializeField] private TextMeshProUGUI playerAmooCountText;
 
     public static UIManager current;
     private void Awake(){
@@ -27,5 +28,8 @@ public class UIManager : MonoBehaviour {
         foreach(TextMeshProUGUI text in hostageCountText){
             text.SetText(string.Concat(currentCount," / ",totalCount));
         }
+    }
+    public void SetPlayerAmmoo(int currentAmo,int maxAmoo){
+        playerAmooCountText.SetText(string.Concat(currentAmo," / ",maxAmoo));
     }
 }

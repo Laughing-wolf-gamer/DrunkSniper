@@ -76,7 +76,7 @@ public class Bullet : MonoBehaviour ,IPooledObject{
         RaycastHit hit;
         if(!isEnemyShot){    
             if(Physics.Raycast(transform.position,transform.forward,out hit,moveDistance,collisionMask,QueryTriggerInteraction.Ignore)){
-                DestroyNow();
+                // DestroyNow();
                 NPCController enemyController = hit.transform.GetComponentInParent<NPCController>();
                 if(enemyController != null){
                     hitTransform = hit.transform;

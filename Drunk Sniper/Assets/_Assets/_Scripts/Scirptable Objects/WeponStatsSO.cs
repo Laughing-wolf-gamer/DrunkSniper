@@ -7,5 +7,6 @@ public class WeponStatsSO : ScriptableObject {
     public float bulletSpeed;
     public float scopeFov;
     public float reloadingTime;
+    public float coolDownTime = 0.2f;
     public int maxBulletInMag = 5;
 }

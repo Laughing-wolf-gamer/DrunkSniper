@@ -118,7 +118,7 @@ Material:
     - Color_108E5520: {r: 1, g: 1, b: 1, a: 0}
     - Color_2295CD4B: {r: 1, g: 1, b: 1, a: 0}
     - Color_3386DC50: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 0}
-    - Color_BAB95EAD: {r: 1, g: 0, b: 0.85984373, a: 0}
+    - Color_BAB95EAD: {r: 0.9622642, g: 0.32226774, b: 0.8719119, a: 0}
     - _BaseColor: {r: 0, g: 1, b: 0.94610643, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

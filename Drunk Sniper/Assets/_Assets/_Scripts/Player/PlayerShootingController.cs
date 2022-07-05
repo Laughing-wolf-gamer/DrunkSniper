@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 using GamerWolf.Utils;
 using System.Collections;
+using UnityEngine.Events;
 using Baracuda.Monitoring;
 using Baracuda.Monitoring.API;
 using System.Collections.Generic;
 public class PlayerShootingController : MonoBehaviour {
+    [Header("Events")]
+    [SerializeField] private UnityEvent OnShotStart,OnShotEnd;
     [SerializeField] private WeponStatsSO weponStats;
     [SerializeField] private float bulletTimeLiveTime = 22f;
     [SerializeField] private LayerMask shootableLayer;
     [SerializeField] private BulletTimeController bulletTimeController;
     [SerializeField] Transform bulletSpawnTransform;
-    [SerializeField] Scope scope;
-    [SerializeField] private float shootingForce;
+    
+    [SerializeField]private Scope scope;
     [SerializeField] private float minDistanceToPlayAnimation;
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Scope currentScope;
@@ -19,9 +22,10 @@ public class PlayerShootingController : MonoBehaviour {
     private bool isScopeEnabled = true;
     private float scrollInput = 0f;
     private bool isShooting = false;
+    [Monitor] private bool canShoot = true;
     private bool wasScopeOn;
     private Camera cam;
-    [Monitor] private int currentBulletLeft;
+    private int currentBulletLeft;
     private MasterController masterController;
     private SwipeDetection swipeDetection;
     private void Awake(){
@@ -31,7 +35,9 @@ public class PlayerShootingController : MonoBehaviour {
         MonitoringManager.UnregisterTarget(this);
     }
     private void Start(){
+        canShoot = true;
         currentBulletLeft = weponStats.maxBulletInMag;
+        UIManager.current.SetPlayerAmmoo(currentBulletLeft,weponStats.maxBulletInMag);
         isReloading = false;
         swipeDetection = SwipeDetection.current;
         masterController = MasterController.current;
@@ -44,8 +50,14 @@ public class PlayerShootingController : MonoBehaviour {
                 if(!isReloading){
                     StartCoroutine(ReloadingRoutine());
                 }
+            }else{
+                OnShotEnd?.Invoke();
             }
+            Invoke(nameof(RestartCanShoot),weponStats.coolDownTime);
         };
+    }
+    private void RestartCanShoot(){
+        canShoot = true;
     }
 
     private void Update(){
@@ -58,16 +70,19 @@ public class PlayerShootingController : MonoBehaviour {
     }
 
     private void HandleShooting(){
-        if (isShooting){
-            if(!isReloading){
-                Shoot();
+        if(canShoot){
+            if (isShooting){
+                if(!isReloading){
+                    Shoot();
+                }
             }
         }
     }
 
-    private void Shoot(){              
-        
+    private void Shoot(){
+        canShoot = false;
         if(currentBulletLeft > 0){
+            OnShotStart?.Invoke();
             Vector3 hitPoint = Vector3.zero;
             Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             if (Physics.Raycast(ray, out RaycastHit hit,Mathf.Infinity,shootableLayer)){
@@ -77,10 +92,11 @@ public class PlayerShootingController : MonoBehaviour {
             }
             GameObject bulletInstance = ObjectPoolingManager.current.SpawnFromPool("Bullet",bulletSpawnTransform.position,bulletSpawnTransform.rotation);
             if(bulletInstance.TryGetComponent<Bullet>(out Bullet bullet)){
-                bullet.Launch(shootingForce, hitPoint);
+                bullet.Launch(weponStats.bulletSpeed, hitPoint);
                 bulletTimeController.StartSequence(bullet, hitPoint,bulletTimeLiveTime);
             }
             currentBulletLeft--;
+            UIManager.current.SetPlayerAmmoo(currentBulletLeft,weponStats.maxBulletInMag);
         }
     }
     private IEnumerator ReloadingRoutine(){
@@ -92,6 +108,8 @@ public class PlayerShootingController : MonoBehaviour {
         isReloading = false;
         playerInput.ToggleInput(true);
         currentBulletLeft = weponStats.maxBulletInMag;
+        OnShotEnd?.Invoke();
+        UIManager.current.SetPlayerAmmoo(currentBulletLeft,weponStats.maxBulletInMag);
     }
 
     private void HandleScope(){
@@ -101,10 +119,13 @@ public class PlayerShootingController : MonoBehaviour {
     
 
     private void GetInput() {
-        isShooting = playerInput.isTouchUp && isScopeEnabled;
+        if(canShoot){
+            isShooting = playerInput.isTouchUp;
+        }
     }
     public void ToggleScope(){
         swipeDetection.CanDetectSwipe(isScopeEnabled);
     }
+    
     
 }

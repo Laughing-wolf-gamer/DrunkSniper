@@ -1,18 +1,11 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using Baracuda.Monitoring;
 using Baracuda.Monitoring.API;
-using UnityEngine.EventSystems;
-
-[RequireComponent(typeof(Rigidbody))]
-public class PlayerMovementController : MonoBehaviour {
-	// private const string HORIZONTAL = "Horizontal";
-	// private const string VERTICAL = "Vertical";
-	
-
+using System.Collections.Generic;
+public class PlayerMovementController : HealthSystem {
 	[SerializeField] Scope scope;
-	[SerializeField] private Vector2 minMaxYRot,minMaxXRot;
+	[SerializeField] private PlayerLevelData playerLevelData;
 	[SerializeField] private Transform rifleTransformParent;
 	[SerializeField] private PlayerInput playerInput;
 	[SerializeField] private float rotationSpeed,rotSmoothTime;
@@ -23,8 +16,8 @@ public class PlayerMovementController : MonoBehaviour {
 
 	private float horizontalInput;
 	private float verticalInput;
-	[Monitor] private float mouseInputX;
-	[Monitor] private float mouseInputY;
+	private float mouseInputX;
+	private float mouseInputY;
 	
 	private float currentRotationY;
 	private float currentRotationX;
@@ -32,13 +25,15 @@ public class PlayerMovementController : MonoBehaviour {
 	private Rigidbody rb;
 
 	private Vector2 moveStartPos;
-	[Monitor] private Vector2 moveDirection;
+	private Vector2 moveDirection;
 
-	private void Awake() {
+	protected override void Awake() {
+		base.Awake();
 		MonitoringManager.RegisterTarget(this);
 		rb = GetComponent<Rigidbody>();
 	}
-	private void OnDestroy(){
+	protected override void OnDestroy(){
+		base.OnDestroy();
 		MonitoringManager.UnregisterTarget(this);
 	}
 
@@ -55,9 +50,14 @@ public class PlayerMovementController : MonoBehaviour {
 	}
 
 	private void Update(){
-		GetInput();
-		
-		HandleRotation();
+		if(MasterController.current.isGamePlaying){
+			if(!MasterController.current.IsBulletMoving){
+				GetInput();
+				HandleRotation();
+			}else{
+				mouseSensivity = 0f;
+			}
+		}
 	}
 
 	private void HandleRotation() {
@@ -65,8 +65,8 @@ public class PlayerMovementController : MonoBehaviour {
 		currentRotationY += yaw;
 		float pitch = mouseInputY * Time.deltaTime * rotationSpeed * mouseSensivity;
 		currentRotationX -= pitch;
-		currentRotationY = Mathf.Clamp(currentRotationY,minMaxYRot.x,minMaxYRot.y);
-		currentRotationX = Mathf.Clamp(currentRotationX, minMaxXRot.x,minMaxXRot.y);
+		currentRotationY = Mathf.Clamp(currentRotationY,playerLevelData.yMinLook,playerLevelData.yMaxLook);
+		currentRotationX = Mathf.Clamp(currentRotationX, playerLevelData.xMinLook,playerLevelData.xMaxLook);
 		Quaternion newRotX = Quaternion.Euler(currentRotationX,0f, 0);
 		rifleTransformParent.localRotation = Quaternion.Slerp(rifleTransformParent.localRotation,newRotX,rotSmoothTime * Time.deltaTime);
 		Quaternion newRotY = Quaternion.Euler(transform.localRotation.x, currentRotationY, transform.localRotation.z);

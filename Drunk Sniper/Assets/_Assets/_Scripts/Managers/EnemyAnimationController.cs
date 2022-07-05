@@ -32,5 +32,14 @@ public class EnemyAnimationController : MonoBehaviour {
     public void SetDefultAnimation(bool walk){
         animator.SetBool("Defult",walk);
     }
+    public void SetStandingCover(bool standing){
+        animator.SetBool("Is Standing Cover",standing);
+    }
+    public void Alerted(bool Alerted){
+        animator.SetBool("isAlreted",Alerted);
+    }
+    public void SetCoverDirction(bool right){
+        animator.SetBool("isRight Cover Standing",right);
+    }
     
 }

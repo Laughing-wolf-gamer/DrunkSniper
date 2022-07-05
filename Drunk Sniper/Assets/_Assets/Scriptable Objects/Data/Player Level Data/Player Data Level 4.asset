@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88814cca3c19ff74ebe91abc5bc75716, type: 3}
+  m_Name: Player Data Level 4
+  m_EditorClassIdentifier: 
+  bulletSpeed: 60
+  xMinLook: 3
+  xMaxLook: 7
+  yMinLook: -7.338
+  yMaxLook: 7
+  weponStatsSO: {fileID: 11400000, guid: c63a5463ca1774b42a474f074a911395, type: 2}

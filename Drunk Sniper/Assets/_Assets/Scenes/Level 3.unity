@@ -1679,8 +1679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scope: {fileID: 1745362290}
-  minMaxYRot: {x: -2.796, y: 2.4}
-  minMaxXRot: {x: 2.81, y: 6}
+  playerLevelData: {fileID: 11400000, guid: e52eb6c49b0bc1941bbb2faf84642239, type: 2}
   rifleTransformParent: {fileID: 1446630567}
   playerInput: {fileID: 1378302824}
   rotationSpeed: 13

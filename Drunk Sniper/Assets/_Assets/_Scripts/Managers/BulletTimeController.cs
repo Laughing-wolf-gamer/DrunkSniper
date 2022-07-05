@@ -27,8 +27,6 @@ public class BulletTimeController : MonoBehaviour {
 	[SerializeField] private Vector3 cameraTrackingOffset;
 	[SerializeField] private BulletTrackingSetupSO[] bulletTrackingSetupSos;
 	[SerializeField] private TargetTrackingSetupSO[] enemyTrackingSetUpSos;
-	// [SerializeField] private BulletTrackingSetup[] bulletTackingSetup;
-	// [SerializeField] private TargetTrackingSetup[] enemyTrackingSetup;
 	[SerializeField] private PlayerShootingController shootingController;
 	[SerializeField] private float distanceToChangeCamera;
 	[SerializeField] private float finishingCameraDuration;
@@ -73,7 +71,7 @@ public class BulletTimeController : MonoBehaviour {
 		}
 		CreateDolly(selectedTrackingSetup);
 		cameraBrain.gameObject.SetActive(true);
-		shootingController.gameObject.SetActive(false);
+		// shootingController.ToggleShooting(false);f
 		canvas.gameObject.SetActive(false);
 		float speed = CalculateDollySpeed();
 		dollyInstance.InitDolly(trackInstance, activeBullet.transform, speed);
@@ -201,13 +199,13 @@ public class BulletTimeController : MonoBehaviour {
 		StartCoroutine(FinishSequence(finishingCameraDuration));
 	}
 
-	private void DestroyCinemachineSetup()
-	{
+	private void DestroyCinemachineSetup(){
 		if(trackInstance != null){
 			Destroy(trackInstance.gameObject);
 		}
 		if(dollyInstance != null){
 			Destroy(dollyInstance.gameObject);
+			
 		}
 	}
 
@@ -215,7 +213,7 @@ public class BulletTimeController : MonoBehaviour {
 		yield return new WaitForSecondsRealtime(_finishingCameraDuration);
 		canChangeCamera = false;
 		cameraBrain.gameObject.SetActive(false);
-		shootingController.gameObject.SetActive(true);
+		// shootingController.ToggleShooting(true);
 		canvas.gameObject.SetActive(true);
 		timeScaleController.SpeedUpTime();
 		DestroyCinemachineSetup();
@@ -227,8 +225,7 @@ public class BulletTimeController : MonoBehaviour {
 		ResetVariables();
 	}
 
-	private void ResetVariables()
-	{
+	private void ResetVariables(){
 		isLastCameraActive = false;
 		trackInstance = null;
 		dollyInstance = null;
