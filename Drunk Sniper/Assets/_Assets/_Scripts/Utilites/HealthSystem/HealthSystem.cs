@@ -38,7 +38,7 @@ public class HealthSystem : MonoBehaviour,IDamageable {
         isDead = true;
         OnPlayerDead?.Invoke();
         // Player Dead;
-        MasterController.current.SetGameOver(false);
+        // MasterController.current.SetGameOver(false);
     }
 
 

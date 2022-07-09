@@ -1381,6 +1381,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 836d6ec9de4d6814381d29b2568bed98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootingLayer:
+    serializedVersion: 2
+    m_Bits: 65536
   shootingPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -1388,8 +1391,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   lr: {fileID: 4253533428079336436}
-  lookAt: 0
+  lookAt: 1
   gunPoint: {fileID: 834430473157356116}
+  offset: {x: 0, y: 0, z: 0}
   npcType: 0
   isDead: 0
   isAlerted: 0
@@ -1400,12 +1404,6 @@ MonoBehaviour:
   movePoints:
   - {fileID: 6264032191575249733}
   - {fileID: 6264032193018145135}
-  shootingPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &2877579718114295170
 GameObject:
   m_ObjectHideFlags: 0
@@ -2715,7 +2713,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5761786312602166930}
   - component: {fileID: 1770479996706340575}
-  - component: {fileID: 3111528091499445399}
   - component: {fileID: 7123456922248252125}
   m_Layer: 18
   m_Name: mesh
@@ -2826,24 +2823,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0037932396, y: 0.17074347, z: 0.06332621}
     m_Extent: {x: 1.1966596, y: 1.2995677, z: 0.43005708}
   m_DirtyAABB: 0
---- !u!114 &3111528091499445399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6334092822411043343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 0, g: 0, b: 0, a: 1}
-  outlineWidth: 1.9
-  precomputeOutline: 1
-  bakeKeys: []
-  bakeValues: []
 --- !u!114 &7123456922248252125
 MonoBehaviour:
   m_ObjectHideFlags: 0

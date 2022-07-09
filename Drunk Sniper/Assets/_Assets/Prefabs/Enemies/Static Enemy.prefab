@@ -1323,14 +1323,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6590298eb6c89bf49a11a3244380dfc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootingLayer:
+    serializedVersion: 2
+    m_Bits: 0
   shootingPoints:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   lr: {fileID: 4030072535001964912}
-  lookAt: 0
+  lookAt: 1
   gunPoint: {fileID: 2029541056156544202}
+  offset: {x: 0, y: 0, z: 0}
   npcType: 1
   isDead: 0
   isAlerted: 1
@@ -2146,9 +2150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outlineMode: 0
+  outlineMode: 1
   outlineColor: {r: 0, g: 0, b: 0, a: 1}
-  outlineWidth: 0.91
+  outlineWidth: 0.4
   precomputeOutline: 1
   bakeKeys: []
   bakeValues: []

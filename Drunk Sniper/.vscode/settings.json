@@ -53,7 +53,7 @@
         "Temp/":true
     },
     "diffEditor.wordWrap": "on",
-    "editor.accessibilitySupport": "on",
+    "editor.accessibilitySupport": "off",
     "editor.wordWrap": "on",
     "editor.wordWrapColumn": 20
 }

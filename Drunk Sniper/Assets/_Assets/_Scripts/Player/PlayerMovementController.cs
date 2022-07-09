@@ -49,7 +49,7 @@ public class PlayerMovementController : HealthSystem {
 		mouseSensivity = minMouseSensivity + scope.GetZoomPrc() * Mathf.Abs(minMouseSensivity - maxMouseSensivity);
 	}
 
-	private void Update(){
+	protected virtual void Update(){
 		if(MasterController.current.isGamePlaying){
 			if(!MasterController.current.IsBulletMoving){
 				GetInput();

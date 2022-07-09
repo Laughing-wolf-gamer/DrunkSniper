@@ -13,7 +13,7 @@ public class StaticEnemies : NPCController {
     }
     protected override void Start(){
         base.Start();
-        base.ShootAtPlayer();
+        // base.ShootAtPlayer();
     }
     private IEnumerator StartCoviering(){
         while(!isDead){
@@ -23,7 +23,7 @@ public class StaticEnemies : NPCController {
                 animationController.SetDefultAnimation(false);
             }else{
                 animationController.SetDefultAnimation(true);
-                base.ShootAtPlayer();
+                // base.ShootAtPlayer();
             }
             yield return new WaitForSeconds(coverTime);
         }

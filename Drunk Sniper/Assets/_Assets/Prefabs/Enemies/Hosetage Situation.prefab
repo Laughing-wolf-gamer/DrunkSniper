@@ -3152,6 +3152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f596118348e15e64bb55cf09e6efe60b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootingLayer:
+    serializedVersion: 2
+    m_Bits: 65536
   shootingPoints: []
   lr: {fileID: 0}
   lookAt: 0
@@ -5950,6 +5953,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f443f621725c3148b777ae87ae3cfea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootingLayer:
+    serializedVersion: 2
+    m_Bits: 0
   shootingPoints: []
   lr: {fileID: 2168912185777215403}
   lookAt: 0

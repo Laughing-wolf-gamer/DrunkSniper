@@ -27,7 +27,7 @@ public class MasterController : MonoBehaviour {
     private float UpdateDelay = 0.1f;
     private int collectedCoins;
     public Action OnPlayerFirstShotComplete;
-    public Action onShotComplete;
+    public Action OnShotComplete;
     private float blurAmount;
     
     public static MasterController current;
@@ -123,6 +123,6 @@ public class MasterController : MonoBehaviour {
 		OnPlayerFirstShotComplete?.Invoke();
 	}
     public void InvokeShotComplete(){
-		onShotComplete?.Invoke();
+		OnShotComplete?.Invoke();
 	}
 }

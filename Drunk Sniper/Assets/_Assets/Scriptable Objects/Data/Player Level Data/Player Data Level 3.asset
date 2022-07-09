@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Player Data Level 3
   m_EditorClassIdentifier: 
   bulletSpeed: 60
-  xMinLook: 2.81
-  xMaxLook: 6
-  yMinLook: -2.796
-  yMaxLook: 2.4
+  xMinLook: 8
+  xMaxLook: 12.68
+  yMinLook: -7.96
+  yMaxLook: 5.81
   weponStatsSO: {fileID: 11400000, guid: c63a5463ca1774b42a474f074a911395, type: 2}

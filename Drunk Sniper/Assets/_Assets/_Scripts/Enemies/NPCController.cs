@@ -16,8 +16,10 @@ public class NPCController : MonoBehaviour {
     [SerializeField] private LineRenderer lr;
     [SerializeField] protected bool lookAt;
     [SerializeField] private Transform gunPoint;
+    [SerializeField] private Vector3 offset;
 
     [Header("Attributes")]
+    [SerializeField] private float fallForce = 100f;
     [SerializeField] private NPCType npcType;
     [SerializeField] protected bool isDead,isAlerted,isStandingCover;
     [SerializeField] private float shootDelay = 2f;
@@ -28,7 +30,6 @@ public class NPCController : MonoBehaviour {
     protected RagdollController ragdollController;
     
     protected bool isBulletMoving;
-    protected Coroutine ShootRoutine;
     protected MasterController masterController;
     private void Awake(){
         animationController = GetComponent<EnemyAnimationController>();
@@ -38,12 +39,17 @@ public class NPCController : MonoBehaviour {
     }
     protected virtual void Start(){
         PlayDefultMovement();
-        lr.gameObject.SetActive(false);
+        if(lr != null){
+            lr.gameObject.SetActive(false);
+        }
         // lr.positionCount = 2;
         masterController = MasterController.current;
-        masterController.onShotComplete += ShootAtPlayer;
+        masterController.OnShotComplete += ShootAtPlayer;
+        if(isAlerted){
+            masterController.InvokeShotComplete();
+        }
     }
-    private void Update(){
+    protected virtual void Update(){
         isBulletMoving = masterController.IsBulletMoving;
         animationController.Alerted(isAlerted);
         if(isBulletMoving){
@@ -58,52 +64,62 @@ public class NPCController : MonoBehaviour {
     }
     
     public virtual void ShootAtPlayer(){
-        isAlerted = true;
-        lr.gameObject.SetActive(true);
-        lr.positionCount = 2;
-        animationController.SetStandingCover(isStandingCover);
-        if(ShootRoutine == null){
-            ShootRoutine = StartCoroutine(ShootPlayerRoutine());
+        if(npcType != NPCType.HostageVictim){
+            isAlerted = true;
+            animationController.SetStandingCover(isStandingCover);
+            if(lr != null){
+                lr.gameObject.SetActive(true);
+                lr.positionCount = 2;
+            }
+            StartCoroutine(ShootPlayerRoutine());
         }
     }
+    private int currentRand;
     private IEnumerator ShootPlayerRoutine(){
         while(!isDead){
-            lr.gameObject.SetActive(true);
+            
             if(!isBulletMoving){
-                int rand = Random.Range(0,shootingPoints.Length);
-
-                // Debug.DrawLine(gunPoint.localPosition,shootingPoints[rand].position,Color.red);
-                lr.SetPosition(0,gunPoint.position);
-                lr.SetPosition(1,shootingPoints[rand].position);
+                currentRand = Random.Range(0,shootingPoints.Length);
+                
                 if(lookAt){
-                    transform.LookAt(new Vector3(shootingPoints[rand].position.x,transform.position.y,shootingPoints[rand].position.z));
+                    transform.LookAt(new Vector3(shootingPoints[currentRand].position.x,transform.position.y,shootingPoints[currentRand].position.z));
                 }
-                Vector3 dir = (shootingPoints[rand].position - transform.position);
-                if(Physics.Raycast(transform.position,dir,out RaycastHit hit,Mathf.Infinity, shootingLayer)){
-                    if(hit.transform.TryGetComponent<IDamageable>(out IDamageable damageable)){
-                        damageable.TakeDamage(10f);
-                    }
-                }
+                
                 animationController.Fire();
             }
             yield return new WaitForSeconds(shootDelay);
-            lr.gameObject.SetActive(false);
-        }
-        if(ShootRoutine != null){
-            StopCoroutine(ShootRoutine);
         }
     }
-    
+    public void DeactivateLR(){
+        if(lr != null){
+            lr.gameObject.SetActive(false);
+        }
+    }
+    public void ShootNow(){
+        if(lr != null){
+            lr.gameObject.SetActive(true);
+            lr.SetPosition(0,gunPoint.position + offset);
+            lr.SetPosition(1,shootingPoints[currentRand].position);
+        }
+        Vector3 dir = (shootingPoints[currentRand].position - transform.position);
+        if(Physics.Raycast(transform.position,dir,out RaycastHit hit,Mathf.Infinity, shootingLayer)){
+            if(hit.transform.TryGetComponent<IDamageable>(out IDamageable damageable)){
+                damageable.TakeDamage(10f);
+            }
+        }
+    }
     public void OnEnemyShot(Vector3 shootDirection, Rigidbody shotRB){
         if(seeThroughToggle != null){
             seeThroughToggle.ChaneLayerOnDeath();
         }
-        lr.gameObject.SetActive(false);
+        if(lr != null){
+            lr.gameObject.SetActive(false);
+        }
         isDead = true;
         StopAnimation();
         ragdollController.EnableRagdoll();
         if (shotRB){
-            shotRB.AddForce(shootDirection.normalized * 100f, ForceMode.Impulse);
+            shotRB.AddForce(shootDirection.normalized * fallForce, ForceMode.Impulse);
         }       
     }
 

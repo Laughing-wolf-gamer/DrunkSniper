@@ -16,5 +16,5 @@ MonoBehaviour:
   xMinLook: 3
   xMaxLook: 7
   yMinLook: -7.338
-  yMaxLook: 7
+  yMaxLook: 7.2
   weponStatsSO: {fileID: 11400000, guid: c63a5463ca1774b42a474f074a911395, type: 2}

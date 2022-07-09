@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour {
         }
         totalEnemey = enemeyList.Count;
         UIManager.current.SetEnemyCount(enemeyList.Count,enemeyList.Count);
-        MasterController.current.onShotComplete += ()=>{
+        MasterController.current.OnShotComplete += ()=>{
             if(hasHostage){
                 CheckHostageAmount();
                 if(hostagesList.Count <= 0){
@@ -48,7 +48,7 @@ public class LevelManager : MonoBehaviour {
         }
         if(enemeyList.Count <= 0){
             MasterController.current.SetGameOver(true);
-            return;
+            // return;
         }
     }
 }

@@ -45,7 +45,7 @@ public class PlayerShootingController : MonoBehaviour {
         isScopeEnabled = true;
         swipeDetection.CanDetectSwipe(isScopeEnabled);
         HandleScope();
-        masterController.onShotComplete += ()=>{
+        masterController.OnShotComplete += ()=>{
             if(currentBulletLeft <= 0){
                 if(!isReloading){
                     StartCoroutine(ReloadingRoutine());
