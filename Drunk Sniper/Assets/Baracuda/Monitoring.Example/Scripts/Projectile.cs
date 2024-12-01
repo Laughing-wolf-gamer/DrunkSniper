@@ -25,7 +25,7 @@ namespace Baracuda.Monitoring.Example.Scripts
             _transform.rotation = rotation;
             _transform.position = position;
             _damage = damage;
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.linearVelocity = Vector3.zero;
             var randomX = Random.Range(-spread, spread);
             var randomY = Random.Range(-spread, spread);
             var randomZ = Random.Range(-spread, spread);

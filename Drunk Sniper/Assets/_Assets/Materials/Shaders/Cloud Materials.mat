@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 9
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -23,6 +23,8 @@ Material:
   m_Name: Cloud Materials
   m_Shader: {fileID: -6465566751694194690, guid: 83f2e8c0fd14a06429b6bbf3f947ef72,
     type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -30,7 +32,9 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -54,8 +58,11 @@ Material:
     - Vector1_b73c464f6fb6436690a9d155c1943097: 0.73
     - Vector1_b79a9d7073da443bbdabdd317121fd92: 0.05
     - Vector1_e026f481ba734f5e93a2c5ae558e5869: 110
+    - _QueueControl: 0
+    - _QueueOffset: 0
     m_Colors:
     - Color_6605c1100bf648ff8ee5013067520198: {r: 0.21711464, g: 0.38679248, b: 0.3715675,
         a: 1}
     - Vector4_95f58611fced4bcf872555d152a2547a: {r: 4.5, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
